@@ -1,0 +1,17 @@
+1528c0e794f133a5b0d82bb480e7f960 *DESCRIPTION
+89800ca533f6698027dfb9ecb77ab6f9 *NAMESPACE
+82a4fc170ec9c81356d3e747f54d5b0f *R/main.R
+96d9d8c2b966a76454061635cd6f1e2f *man/df_for_wald.Rd
+6cedc561b3eac7d627ce230345803166 *man/fixcoef.Rd
+cbb327d8b0c02eeb505adc451b32f79a *man/glmglrt.Rd
+6976cf4f111728db42fb5bfe3d6f95ef *man/override_summary.Rd
+09621aed4be7741faffcf207710c7c1a *man/p_value.glm.Rd
+51e62764058c5879d4678c4b36e786f3 *man/p_value_contrast.Rd
+ad0d98fc35a1398770a846e7c48ff6f4 *man/print.summary.glmglrt.Rd
+3d1110d7899e460081eafe0a548e8f67 *man/summarylr.Rd
+581f3b494b87a5a8521d01e066a3c32a *man/vcov_fixcoef.Rd
+6f4ab562996b66c16c4b4019b46ab48f *tests/testthat.R
+f61a20171e5a0ee23ff786cb4400bb49 *tests/testthat/test-contrasts.R
+11324da210c01dccb722b3ac67f0857a *tests/testthat/test-print.R
+5b49cff33c811050ea6f3fc5334aecf7 *tests/testthat/test-pvalue.R
+e126c8e30a21b778cb65322760209aa5 *tests/testthat/test-summary.R
