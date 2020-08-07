@@ -33,7 +33,8 @@ p_value_contrast(
   H0 = 0,
   method = "Wald",
   ...,
-  debuglevel = 0
+  debuglevel = 0,
+  force = FALSE
 )
 }
 \arguments{
@@ -57,11 +58,13 @@ the Generalized Likelihood Ratio Test, Rao's score test and non-asymptotic exact
 \item{force}{logical; if TRUE, force computation of P-values in case of convergence problems.}
 }
 \value{
-A single numeric value equal to the one-sided (for alternative="less" or "greater") or two-sided P-value
+A single numeric value (vector of length 1) equal to the one-sided (for alternative="less" or "greater") or two-sided P-value
 }
 \description{
 This S3 generic function allows the computation of P-values associated to
-hypothesis tests of contrasts (i.e. linear combinations) of fixed-effects in a model
+hypothesis tests of contrasts (i.e. linear combinations) of fixed-effects in a model.
+The default implementation computes Wald's P-values with any model as long as it consistently implements \code{\link{fixcoef}}, \code{\link{vcov_fixcoef}} and \code{\link{df_for_wald}}.
+It is also specialized for GLMs and negative binomial models (see \code{\link[MASS:glm.nb]{MASS::glm.nb}}) with Wald's, LRT and Rao's P-values and may be specialized with other models.
 }
 \details{
 Every implementation MUST support specification of the alternative hypothesis
@@ -71,19 +74,20 @@ Every implementation MUST support specification of the alternative hypothesis
 \itemize{
 \item \code{glm}: It supports Wald (method="Wald"),
 Generalized Likelihood Ratio Tests (method="LRT") and Rao's score tests (method="Rao").
-It works for \code{\link[stats:glm]{stats::glm}} models and negative binomial models (\code{\link[MASS:glm.nb]{MASS::glm.nb}}).
+It works for \code{\link[stats:glm]{stats::glm}} models and negative binomial models (\code{\link[MASS:glm.nb]{MASS::glm.nb}}) with method="LRT" and method="Wald".
 
-\item \code{default}: Supports Wald's test on a wide range of models: \code{lm}, \code{\link[stats:lm]{mlm}},
-\code{glm}, \code{\link[MASS:glm.nb]{negbin}}, \code{polr}, \code{rlm},
-\code{multinom}, \code{\link[nlme:gls]{gls}}, \code{\link[nlme:lme]{nlme::lme}},
-\code{\link[lme4:lmer]{lme4::lmer}}, \code{\link[lme4:glmer]{lme4::glmer}},
-\code{\link[survival:coxph]{coxph}}, \code{\link[survival:survreg]{survreg}}.
+\item \code{default}: Supports Wald's test on a wide range of models, including \code{\link[stats:lm]{lm}}, \code{\link[stats:lm]{mlm}},
+\code{\link[stats:glm]{stats::glm}}, \code{\link[MASS:glm.nb]{negbin}}, \code{\link[MASS:polr]{MASS::polr}},
+\code{\link[MASS:rlm]{MASS::rlm}} (with normality assumptions, defeating the purpose of rlm), \code{\link[nlme:lme]{nlme::lme}}, 
+\code{\link[nlme:gls]{nlme::gls}}, \code{\link[lme4:lmer]{lme4::lmer}}, \code{\link[lme4:glmer]{lme4::glmer}}, 
+\code{\link[mgcv:gam]{mgcv::gam}}, \code{\link[gam:gam]{gam::gam}}, \code{\link[survival:coxph]{survival::coxph}}, 
+\code{\link[survival:survreg]{survival::survreg}}, 
+\code{\link[nnet:multinom]{nnet::multinom}}, \code{\link[stats:nls]{stats::nls}}.
+
 It can be easily extended by implementing three generic functions:
-\code{\link[glmglrt:fixcoef]{fixcoef}}, \code{\link[glmglrt:vcov_fixcoef]{vcov_fixcoef}} and
-\code{\link[glmglrt:df_for_wald]{df_for_wald}}.
-If the implementation of \code{\link[stats:coef]{coef}}, \code{\link[stats:vcov]{vcov}} and
-\code{\link[stats:df.residual]{df.residual}} is correct, you do not have to implement
-\code{fixcoef}, \code{vcov_fixcoef} and \code{df_for_wald}.
+\code{\link[glmglrt:fixcoef]{fixcoef}}, \code{\link[glmglrt:vcov_fixcoef]{vcov_fixcoef}} and \code{\link[glmglrt:df_for_wald]{df_for_wald}}.
+If the implementations of \code{\link[stats:coef]{coef}}, \code{\link[stats:vcov]{vcov}} and \code{\link[stats:df.residual]{df.residual}} are consistent,
+you do not have to implement \code{fixcoef}, \code{vcov_fixcoef} and \code{df_for_wald}.
 }}
 
 \examples{
@@ -106,12 +110,15 @@ p_value_contrast(model1, c(0,-1,0.5), alternative="greater", method="Wald", H0=0
 p_value_contrast(model2, c(0,-1,1), alternative="greater", method="Wald", H0=log(2))
 }
 \seealso{
-\code{\link[glmglrt:p_value_contrast]{p_value_contrast.default}},
-\code{\link[glmglrt:p_value_contrast]{p_value_contrast.glm}}
-
 Other Wald-related functions: 
 \code{\link{df_for_wald}()},
 \code{\link{fixcoef}()},
 \code{\link{vcov_fixcoef}()}
+
+Other Contrast functions: 
+\code{\link{confint_contrast}()},
+\code{\link{estimate_confint_contrast}()},
+\code{\link{estimate_contrast}()}
 }
+\concept{Contrast functions}
 \concept{Wald-related functions}

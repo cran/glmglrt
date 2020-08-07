@@ -1,5 +1,6 @@
 data(mtcars)
 override_summary()
+tol=1e-4
 
 test_that("null model that converge", {
 	smodel = summary(glm(family=binomial(log), rep(1,10) ~ 0, offset=rep(log(0.9),10)))
@@ -40,37 +41,37 @@ test_that("model that do not converge", {
 test_that("command-line offset is taken in account", {
 	model1 = glm(family="gaussian", data=mtcars, mpg ~ gear)
 	model2 = glm(family="gaussian", data=mtcars, mpg ~ gear, offset=coef(model1)[2]*gear)
-	expect_equal(summary(model2)$extra$pvalues["gear","LRT P-value"],1)
+	expect_equal(summary(model2)$extra$pvalues["gear","LRT P-value"],1,tolerance=tol)
 })
 
 test_that("formula offset is taken in account", {
 	model1 = glm(family="gaussian", data=mtcars, mpg ~ gear)
 	model2 = glm(family="gaussian", data=mtcars, mpg ~ gear+offset(coef(model1)[2]*gear))
-	expect_equal(summary(model2)$extra$pvalues["gear","LRT P-value"],1)
+	expect_equal(summary(model2)$extra$pvalues["gear","LRT P-value"],1,tolerance=tol)
 })
 
 test_that("command-line+formula offsets are taken in account", {
 	model1 = glm(family="gaussian", data=mtcars, mpg ~ gear)
 	model2 = glm(family="gaussian", data=mtcars, mpg ~ gear+offset(coef(model1)[2]*gear/2), offset=coef(model1)[2]*gear/2)
-	expect_equal(summary(model2)$extra$pvalues["gear","LRT P-value"],1)
+	expect_equal(summary(model2)$extra$pvalues["gear","LRT P-value"],1,tolerance=tol)
 })
 
 test_that("weights are taken in account", {
 	model1 = glm(family="gaussian", data=mtcars, mpg ~ 1, weights=wt) # weighted mean
 	model2 = glm(family="gaussian", data=mtcars, I(mpg-coef(model1)) ~ 1, weights=wt)
-	expect_equal(summary(model2)$extra$pvalues["(Intercept)","LRT P-value"],1)
+	expect_equal(summary(model2)$extra$pvalues["(Intercept)","LRT P-value"],1,tolerance=tol)
 })
 test_that("weights and offset work together in intercept-only model", {
 	model1 = glm(family="gaussian", data=mtcars, mpg ~ 1, weights=wt) # weighted mean
 	model2 = glm(family="gaussian", data=mtcars, I(mpg) ~ 1, weights=wt, offset=fitted(model1))
-	expect_equal(summary(model2)$extra$pvalues["(Intercept)","LRT P-value"],1)
+	expect_equal(summary(model2)$extra$pvalues["(Intercept)","LRT P-value"],1,tolerance=tol)
 
 })
 
 test_that("LRT and Rao tests equal on gaussian model", {
 	model = glm(family="gaussian", data=mtcars, mpg ~ gear)
 	smodel = summary(model, method=c("Rao","LRT", "Wald"))$extra$pvalues
-	expect_equal(smodel["LRT P-value"], smodel["Rao P-value"])
+	expect_equal(smodel["LRT P-value"], smodel["Rao P-value"],tolerance=tol)
 })
 
 test_that("Wald P-values are equal on gaussian, Gamma and inverse.gaussian model", {
@@ -80,7 +81,7 @@ test_that("Wald P-values are equal on gaussian, Gamma and inverse.gaussian model
 			smodel = summary(model, method=c("Rao","LRT", "Wald"))
 			expect(all(is.finite(smodel$extra$pvalues[,"LRT P-value"])), "LRT P-value must be well defined")
 			expect(all(is.finite(smodel$extra$pvalues[,"Rao P-value"])), "Rao P-value must be well defined")
-			expect_equal(smodel$extra$pvalues[,"Wald P-value"], smodel$coefficients[,"Pr(>|t|)"])
+			expect_equal(smodel$extra$pvalues[,"Wald P-value"], smodel$coefficients[,"Pr(>|t|)"],tolerance=tol)
 		}
 	}
 })
@@ -92,7 +93,7 @@ test_that("Wald P-values are equal on binomial models", {
 			smodel = summary(model, method=c("Wald","LRT","Rao"))
 			expect(all(is.finite(smodel$extra$pvalues[,"LRT P-value"])), "LRT P-value must be well defined")
 			expect(all(is.finite(smodel$extra$pvalues[,"Rao P-value"])), "Rao P-value must be well defined")
-			expect_equal(smodel$extra$pvalues[,"Wald P-value"], smodel$coefficients[,"Pr(>|z|)"])
+			expect_equal(smodel$extra$pvalues[,"Wald P-value"], smodel$coefficients[,"Pr(>|z|)"],tolerance=tol)
 		}
 	}
 })
@@ -104,7 +105,7 @@ test_that("Wald P-values are equal on poisson models", {
 			smodel = summary(model, method=c("Wald","LRT","Rao"))
 			expect(all(is.finite(smodel$extra$pvalues[,"LRT P-value"])), "LRT P-value must be well defined")
 			expect(all(is.finite(smodel$extra$pvalues[,"Rao P-value"])), "Rao P-value must be well defined")
-			expect_equal(smodel$extra$pvalues[,"Wald P-value"], smodel$coefficients[,"Pr(>|z|)"])
+			expect_equal(smodel$extra$pvalues[,"Wald P-value"], smodel$coefficients[,"Pr(>|z|)"],tolerance=tol)
 		}
 	}
 })
@@ -133,4 +134,3 @@ test_that("non-standard fit methods are passed-through", {
 })
 
 
-# print(summary.glm(glm(family="binomial", cbind(c(5,1),c(1,5)) ~ c(0,1)),dispersion=42,correlation=TRUE,symbolic.cor=T),digits=10,signif.stars=F)

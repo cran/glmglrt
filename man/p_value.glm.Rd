@@ -2,7 +2,7 @@
 % Please edit documentation in R/main.R
 \name{p_value.glm}
 \alias{p_value.glm}
-\title{Computing p-values of hypothesis tests on coefficients of Generalized Linear Models}
+\title{Computing p-values of hypothesis tests on coefficients of Generalized Linear Models and other}
 \usage{
 \method{p_value}{glm}(
   model,

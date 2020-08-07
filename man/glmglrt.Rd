@@ -21,10 +21,11 @@ This package provides a way to override (see \link{override_summary}) the standa
 by a \code{\link{summarylr}} function that provides LRT and/or Rao's score P-values.
 }
 
-\section{Generic p_value functions}{
+\section{Functions to estimate contrasts}{
 
-It also provides a function \code{\link{p_value_contrast}} to make LRT or Rao hypothesis tests on contrasts of
-coefficients of GLMs. This is an alternative to \code{\link[multcomp:glht]{multcomp::glht}} without
+It also provides functions \code{\link{estimate_contrast}}, \code{\link{confint_contrast}} and \code{\link{p_value_contrast}}
+to estimate contrasts of coefficients of GLMs with LRT, Rao's and Wald's hypothesis tests and confidence intervals
+This is an alternative to \code{\link[multcomp:glht]{multcomp::glht}} without
 Wald's approximation ! It also provides a less powerful \code{\link{p_value.glm}} method for the S3 generic
 \link[parameters:p_value]{parameters::p_value}. It also extends this S3 generic for a variety
 of models as \code{\link{p_value.default}}. That time, the only method supported for all models, is Wald's method.
